@@ -67,9 +67,9 @@ class ProductManager {
    * @param {number} stock - Número de piezas disponibles.
    */
   addProduct(title, description, price, thumbnail, code, stock) {
-    // Validar que todos los campos sean obligatorios
+    // Validar que todos los campos sean obligatorios. Se verifica que title, description, price, thumbnail, code, y stock no sean falsy (es decir, no sean null, undefined, 0, "", etc.). Si alguno de estos campos es falsy, se lanza un error con el mensaje "Todos los campos son obligatorios".
     if (!title || !description || !price || !thumbnail || !code || !stock) {
-      throw new Error("Todos los campos son obligatorios");
+      throw new Error("Todos los campos son obligatorios.");
     }
 
     // Valida que no se repita el campo "code"
@@ -109,17 +109,70 @@ class ProductManager {
    * @returns {Object | undefined} - El producto encontrado o undefined si no se encuentra.
    */
   getProductById(id) {
+
+    // Valida que el ID sea un número válido y si no lo es, imprime el mensaje "ID de producto inválido".
+
+    if (typeof id !== 'number' || id <= 0) {
+      throw new Error("ID de producto inválido. Debe ser mayor a 0.\n");
+
+    }
+
     const product = this.products.find(product => product.id === id);
     if (!product) {
-      console.log("Producto no encontrado");
+      throw new Error("Producto no encontrado.");
     }
     return product;
   }
 }
 
 // Ejemplo de uso
+// creo una instancia de la clase ProductManager:
 const productManager = new ProductManager();
-productManager.addProduct("Product 1", "Description 1", 50, "image1.jpg", "P1", 10);
-productManager.addProduct("Product 2", "Description 2", 100, "image2.jpg", "P2", 20);
+
+// agrego dos productos:
+//uso try para que me muestre los errores en consola ya que uso throw new Error en lugar de console.log.
+try {
+  productManager.addProduct("Product 1", "Description 1", 50, "image1.jpg", "P1", 10);
+} catch (error) {
+  console.error("\nError al agregar Product 1:", error.message);
+}
+
+try {
+  productManager.addProduct("Product 2", "Description 2", 100, "image2.jpg", "P2", 20);
+} catch (error) {
+  console.error("\nError al agregar Product 2:", error.message);
+}
+
+//Producto incompleto para probar el mensaje de error.
+try {
+  productManager.addProduct("Product 3", "Description 3", 100, "image3.jpg", null, 20);
+} catch (error) {
+  console.error("\nError al agregar Product 3:", error.message);
+}
+
+//Me muestra todos los productos.
+console.log("\n Todos los productos: \n"); //Titulo y saltos de linea para ver mas claro en consola!
 console.log(productManager.getProducts());
-console.log(productManager.getProductById(1));
+
+// Intenta obtener un producto con un ID válido
+// Uso try para que me muestre los mensajes de error al usar throw new Error en lugar de console.log.
+
+try {
+  console.log("\n Producto con tu ID: \n");
+  console.log(productManager.getProductById(1));
+} catch (error) {
+  console.error(error.message);
+}
+
+// Intenta obtener un producto con un ID inválido
+try {
+  console.log("\n Producto con ID erroneo: \n");
+  console.log(productManager.getProductById(0));
+} catch (error) {
+  console.error(error.message);
+}
+
+/**
+ * CORRECCION DEL EJERCICIO:
+ * Buenísimo Gustavo! Tu clase y métodos funcionan correctamente! Me encantó que le agregaste validaciones a las propiedades del nuevo producto, de la misma manera se lo podes colocar a lo que te llega por parámetro en la búsqueda de producto por ID. Igualmente esta muy bien! :)
+ */
